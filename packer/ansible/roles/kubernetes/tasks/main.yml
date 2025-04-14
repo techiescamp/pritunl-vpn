@@ -1,0 +1,9 @@
+---
+- name: Install kubectl
+  shell: curl -LO "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl" && chmod +x kubectl && mv kubectl /usr/local/bin
+
+- name: Install eksctl
+  shell: curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /usr/local/bin
+
+- name: Install helm
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash

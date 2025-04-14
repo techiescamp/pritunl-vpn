@@ -1,0 +1,48 @@
+---
+- name: Download Node Exporter
+  ansible.builtin.get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v1.9.0/node_exporter-1.9.0.linux-amd64.tar.gz"
+    dest: "/tmp/node_exporter-1.9.0.linux-amd64.tar.gz"
+    mode: '0644'
+
+- name: Extract Node Exporter tarball
+  ansible.builtin.command: "tar xvfz /tmp/node_exporter-1.9.0.linux-amd64.tar.gz -C /tmp"
+  args:
+    creates: "/tmp/node_exporter-1.9.0.linux-amd64"
+
+- name: Move Node Exporter binary to /usr/local/bin
+  ansible.builtin.command: "mv /tmp/node_exporter-1.9.0.linux-amd64/node_exporter /usr/local/bin/"
+  args:
+    creates: "/usr/local/bin/node_exporter"
+
+- name: Create node-exporter user
+  ansible.builtin.command: "useradd -rs /bin/false node_exporter"
+  args:
+    creates: "/home/node_exporter"  # This won’t create a home dir, but we use it as a check
+
+- name: Create Node Exporter service file
+  ansible.builtin.copy:
+    content: |
+      [Unit]
+      Description=Node Exporter
+      After=network.target
+
+      [Service]
+      User=node_exporter
+      Group=node_exporter
+      Type=simple
+      ExecStart=/usr/local/bin/node_exporter
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: "/etc/systemd/system/node_exporter.service"
+    mode: '0644'
+
+- name: Reload systemd daemon
+  ansible.builtin.command: "systemctl daemon-reload"
+
+- name: Start Node Exporter service
+  ansible.builtin.command: "systemctl start node_exporter"
+
+- name: Enable Node Exporter service
+  ansible.builtin.command: "systemctl enable node_exporter"
