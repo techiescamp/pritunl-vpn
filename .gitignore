@@ -1,0 +1,28 @@
+# Packer-specific ignores
+output-*/           # Packer build output directories
+packer_cache/       # Packer plugin and ISO cache
+*.box               # Vagrant box files (if using Vagrant post-processor)
+*.ova               # OVA/OVF artifacts
+*.vmdk              # VMDK disk images
+*.qcow2             # QCOW2 disk images
+
+# Logs and temporary files
+*.log               # Log files
+*.tmp               # Temporary files
+*.swp               # Vim swap files
+
+# Sensitive files (credentials, variables)
+variables.auto.pkrvars.hcl  # Auto-generated vars (if used)
+*.pem               # Private keys
+*.key               # SSH/SSL keys
+*.cer               # Certificates
+*.kubeconfig        # Kubernetes configs
+
+# IDE/Editor specific files
+.idea/              # JetBrains IDE
+.vscode/            # VS Code
+*.code-workspace    # VS Code workspace
+
+# OS-specific files
+.DS_Store           # macOS
+Thumbs.db           # Windows
